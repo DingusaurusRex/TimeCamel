@@ -1,6 +1,9 @@
 # Our Bot
 import move
+from playerinterface import PlayerInterface
 
-def determineMove(playerNum, gameState):
-	m = move(move.ROLL_MOVE)
-	return m.generateMoveArray()
+class TimeCamel(PlayerInterface):
+
+	def move(playerNum, gameState):
+		m = move(move.ROLL_MOVE)
+		return m.generateMoveArray()
