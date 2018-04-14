@@ -308,4 +308,4 @@ def check_bet(hashed_bet, user_bet):
     return bet == hashlib.sha256(salt.encode() + user_bet.encode()).hexdigest()
 
 
-GameModerator()
+#GameModerator()
