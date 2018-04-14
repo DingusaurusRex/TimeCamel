@@ -18,15 +18,36 @@ def findCamel(camel,track):
                     return [s1,s2]
     if no_camel:
         return [-1,-1]
+		
+# Randomly pick a number between 1 and 3 inclusive
+# output: integer
+#def rollDie():
 
-# move the camel
-# input: current game state
-#def moveCamel(game)
+# Randomly choose one of the camels who hasn't moved to move
+# output: integer, the camel number to move
+#def chooseCamelToMove(gameState)
 
-#def placeRoundBet(camel)
+# Move the given camel (and all camels above it) by the given amount
+# output: new gamestate
+#def moveCamel(gameState, camel, movement):
 
-#def placeLoserBet(camel)
+# Execute a single round of movement (move all camels once)
+# Moves the camels in a random order
+# output: new gamestate
+#def moveAllCamels(gameSate):
 
-#def placeWinnerBet(camel)
+# Place a bet on the given camel
+# output: new gamestate
+#def placeRoundBet(gameState, camel):
 
-#def placeTrap(camel,type)
+# Place a bet on the losing camel
+# output: new gamestate
+#def placeLoserBet(gameState, camel):
+
+# Place a bet on the winning camel
+# output: new gamestate
+#def placeWinnerBet(gameState, camel):
+
+# Place a trap on the given tile
+# output: new gamestate
+#def placeTrap(gameState, trapType, trapLocation):
