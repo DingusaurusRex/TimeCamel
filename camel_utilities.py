@@ -2,6 +2,7 @@ import camelup as c
 import math
 import random
 import copy
+import move
 
 # creates a new game state 
 # the game state is prepopulated with the moved camels 
@@ -10,6 +11,7 @@ def startGame():
 
 # find the camel on the track 
 # input: camel number, current track object (GameState.camel_track)
+# output: [board space, spot on stack]
 def findCamel(camel,track):
     no_camel=False
     for s1 in range(0,len(track)):
@@ -100,27 +102,7 @@ def moveAllCamels(gameSate):
 		movement = rollDie()
 		result = moveOneCamel(result, camel, movement)
 	return result
-
-# Place a bet on the given camel
-# output: new gamestate
-def placeRoundBet(gameState, camel):
-	result = copy.deepcopy(gameState)
-    result.round_bets.append(camel)
-	return result
-
-# Place a bet on the losing camel
-# output: new gamestate
-def placeLoserBet(gameState, camel):
-	result = copy.deepcopy(gameState)
-    result.game_loser_bets.apend(camel)
-	return result
 	
-# Place a bet on the winning camel
-# output: new gamestate
-def placeWinnerBet(gameState, camel):
-	result = copy.deepcopy(gameState)
-    result.game_winner_bets.append(camel)
-	return result
 
 # Place a trap on the given tile
 # output: new gamestate
@@ -136,3 +118,46 @@ def placeTrap(gameState, trapType, trapLocation):
         result.trap_track[trapLocation].append(trapType)
         return result.trap_track[trapLocation].append(trapType)
     return None
+
+# Place a bet on the given camel
+# output: new gamestate
+def placeRoundBet(gameState, camel):
+	result = copy.deepcopy(gameState)
+    result.round_bets.append(camel)
+	return result
+	
+# Place a bet on the winning camel
+# output: new gamestate
+def placeWinnerBet(gameState, camel):
+	result = copy.deepcopy(gameState)
+    result.game_winner_bets.append(camel)
+	return result
+	
+# Place a bet on the losing camel
+# output: new gamestate
+def placeLoserBet(gameState, camel):
+	result = copy.deepcopy(gameState)
+    result.game_loser_bets.apend(camel)
+	return result
+
+# Execute the move specified on the given game state
+def makeMove(gameState, move):
+	result = copy.deepcopy(gameState)
+	if move.moveType == ROLL_MOVE:
+		camel = chooseCamelToMove(result)
+		movement = rollDie()
+		result = moveOneCamel(result, camel, movement)
+	elif move.moveType == PLACE_TRAP_MOVE:
+		result = placeTrap(result, move.trapType, move.trapLocation)
+	elif move.moveType == PLACE_ROUND_BET:
+		result = placeRoundBet(result, move.chosenCamel)
+	elif move.moveType == PLACE_GAME_WINNER_BET:
+		result = placeWinnerBet(result, move.chosenCamel)
+	elif move.moveType == PLACE_GAME_LOSER_BET:
+		result = placeLoserBet(result, move.chosenCamel)
+	return result
+	
+
+# Returns the percentage chance that each camel will win the round, given the current game state
+# output: array specifying the round win percent for each camel i.e. [.15, .5, .15, .15, .05]
+#def roundWinnerPercentages(gameState):
