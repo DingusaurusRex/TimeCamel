@@ -30,15 +30,15 @@ def setChosenCamel(chosenCamel):
 	return self
 	
 def generateMoveArray():
-	if moveType = ROLL_MOVE:
+	if moveType == ROLL_MOVE:
 		return [ROLL_MOVE]
-	elif moveType = PLACE_TRAP_MOVE:
+	elif moveType == PLACE_TRAP_MOVE:
 		return [PLACE_TRAP_MOVE, trapType, trapLocation]
-	elif: moveType = PLACE_ROUND_BET:
+	elif moveType == PLACE_ROUND_BET:
 		return [PLACE_ROUND_BET, chosenCamel]
-	elif: moveType = PLACE_GAME_WINNER_BET:
+	elif moveType == PLACE_GAME_WINNER_BET:
 		return [PLACE_GAME_WINNER_BET, chosenCamel]
-	elif: moveType = PLACE_GAME_LOSER_BET:
+	elif moveType == PLACE_GAME_LOSER_BET:
 		return [PLACE_GAME_LOSER_BET, chosenCamel]
 	else:
 		return None

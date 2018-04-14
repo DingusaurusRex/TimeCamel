@@ -33,7 +33,7 @@ def chooseCamelToMove(gameState):
     camelToMove = -1
     camelMoveState = gamestate.camel_yet_to_move
     unmovedCamelIndices = []
-    for index camelState in enumerate(camelMoveState):
+    for index, camelState in enumerate(camelMoveState):
         if camelState == True:
             unmovedCamelIndices.append(index)
     camelToMove = random.choice(unmovedCamelIndices)
@@ -113,8 +113,7 @@ def placeTrap(gameState, trapType, trapLocation):
     after = trapLocation + 1
     camelLocations = result.camel_track
     trapLocations = result.trap_track
-    if not camelLocation[before] and not camelLocations[trapLocation] and not camelLocations[after] \
-    and  trapLocations[before] and not trapLocations[trapLocation] and not trapLocations[after]
+    if not camelLocation[before] and not camelLocations[trapLocation] and not camelLocations[after] and trapLocations[before] and not trapLocations[trapLocation] and not trapLocations[after]:
         result.trap_track[trapLocation].append(trapType)
         return result.trap_track[trapLocation].append(trapType)
     return None
@@ -123,21 +122,21 @@ def placeTrap(gameState, trapType, trapLocation):
 # output: new gamestate
 def placeRoundBet(gameState, camel):
 	result = copy.deepcopy(gameState)
-    result.round_bets.append(camel)
+	result.round_bets.append(camel)
 	return result
 	
 # Place a bet on the winning camel
 # output: new gamestate
 def placeWinnerBet(gameState, camel):
 	result = copy.deepcopy(gameState)
-    result.game_winner_bets.append(camel)
+	result.game_winner_bets.append(camel)
 	return result
 	
 # Place a bet on the losing camel
 # output: new gamestate
 def placeLoserBet(gameState, camel):
 	result = copy.deepcopy(gameState)
-    result.game_loser_bets.apend(camel)
+	result.game_loser_bets.apend(camel)
 	return result
 
 # Execute the move specified on the given game state
