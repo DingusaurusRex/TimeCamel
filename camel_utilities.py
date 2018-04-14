@@ -29,7 +29,7 @@ def rollDie():
 def chooseCamelToMove(gameState):
     camelToMove = -1
     camelMoveState = gamestate.camel_yet_to_move
-	unmovedCamelIndices = []
+    unmovedCamelIndices = []
     for index camelState in enumerate(camelMoveState):
         if camelState == True:
             unmovedCamelIndices.append(index)
@@ -62,4 +62,15 @@ def placeWinnerBet(gameState, camel):
 
 # Place a trap on the given tile
 # output: new gamestate
-#def placeTrap(gameState, trapType, trapLocation):
+# returns none if trap can not be placed
+def placeTrap(gameState, trapType, trapLocation):
+    result = copy.deepcopy(gameState)
+    before = trapLocation - 1
+    after = trapLocation + 1
+    camelLocations = result.camel_track
+    trapLocations = result.trap_track
+    if not camelLocation[before] and not camelLocations[trapLocation] and not camelLocations[after] \
+    and  trapLocations[before] and not trapLocations[trapLocation] and not trapLocations[after]
+        result.trap_track[trapLocation].append(trapType)
+        return result.trap_track[trapLocation].append(trapType)
+    return None
