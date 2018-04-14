@@ -41,4 +41,4 @@ def generateMoveArray():
 	elif: moveType = PLACE_GAME_LOSER_BET:
 		return [PLACE_GAME_LOSER_BET, chosenCamel]
 	else:
-		return none
+		return None

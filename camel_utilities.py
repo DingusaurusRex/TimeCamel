@@ -41,6 +41,10 @@ def chooseCamelToMove(gameState):
 # output: new gamestate
 def moveOneCamel(gameState, camel, movement):
 	result = copy.deepcopy(gameState)
+	
+	# mark the camel as moved
+	result.camel_yet_to_move[camel] = False
+	
 	track = result.camel_track
 	
 	# find camel location
@@ -53,7 +57,7 @@ def moveOneCamel(gameState, camel, movement):
 	newLocation = camelLocation[0] + movement
 	
 	# adjust new location based on traps
-	moveBack = false
+	moveBack = False
 	trapTrack = result.trap_track
 	if newLocation < len(trapTrack):
 		newLocationTrap = trapTrack[newLocation]
@@ -88,7 +92,14 @@ def moveOneCamel(gameState, camel, movement):
 # Execute a single round of movement (move all camels once)
 # Moves the camels in a random order
 # output: new gamestate
-#def moveAllCamels(gameSate):
+def moveAllCamels(gameSate):
+	result = copy.deepcopy(gameState)
+	numCamelsToMove = sum(result.camel_yet_to_move)
+	for x in range (0, numCamelsToMove):
+		camel = chooseCamelToMove(result)
+		movement = rollDie()
+		result = moveOneCamel(result, camel, movement)
+	return result
 
 # Place a bet on the given camel
 # output: new gamestate
