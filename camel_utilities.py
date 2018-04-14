@@ -21,11 +21,28 @@ def findCamel(camel,track):
 		
 # Randomly pick a number between 1 and 3 inclusive
 # output: integer
-#def rollDie():
-
+def rollDie():
+    return randInt(1, 3)
 # Randomly choose one of the camels who hasn't moved to move
 # output: integer, the camel number to move
-#def chooseCamelToMove(gameState)
+def chooseCamelToMove(gameState)
+    camelToMove = -1
+    camelMoveState = gamestate.camel_yet_to_move
+    unmovedCamels = sum(camelMoveState) - len(camelMoveState)
+    if (unmovedCamels == 0):
+        return -1
+    unmovedCamelChoice = randInt(1, unmovedCamels)
+        unmovedCount = 0
+        index = 0
+    for camel in camelMoveState:
+        index += 1
+        if camel == False
+            unmovedCount += 1
+        if unmovedCount == unmovedCamelChoice:
+            camelToMove = index
+            break
+    return camelToMove
+        
 
 # Move the given camel (and all camels above it) by the given amount
 # output: new gamestate
