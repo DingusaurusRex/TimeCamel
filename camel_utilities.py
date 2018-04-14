@@ -93,17 +93,23 @@ def moveOneCamel(gameState, camel, movement):
 # Place a bet on the given camel
 # output: new gamestate
 def placeRoundBet(gameState, camel):
-    gameState.round_bets.append(camel)
+	result = copy.deepcopy(gameState)
+    result.round_bets.append(camel)
+	return result
 
 # Place a bet on the losing camel
 # output: new gamestate
 def placeLoserBet(gameState, camel):
-    gameState.game_loser_bets.apend(camel)
-
+	result = copy.deepcopy(gameState)
+    result.game_loser_bets.apend(camel)
+	return result
+	
 # Place a bet on the winning camel
 # output: new gamestate
 def placeWinnerBet(gameState, camel):
-    gameState.game_winner_bets.append(camel)
+	result = copy.deepcopy(gameState)
+    result.game_winner_bets.append(camel)
+	return result
 
 # Place a trap on the given tile
 # output: new gamestate
