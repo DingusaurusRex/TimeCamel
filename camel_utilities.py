@@ -28,6 +28,11 @@ def rollDie():
 def chooseCamelToMove(gameState)
     camelToMove = -1
     camelMoveState = gamestate.camel_yet_to_move
+	
+	# get list of camel numbers that haven't moved
+	# randomly pick an index of that list
+	# return the camel number at that index
+	
     unmovedCamels = sum(camelMoveState) - len(camelMoveState)
     if (unmovedCamels == 0):
         return -1
@@ -46,7 +51,7 @@ def chooseCamelToMove(gameState)
 
 # Move the given camel (and all camels above it) by the given amount
 # output: new gamestate
-#def moveCamel(gameState, camel, movement):
+def moveCamel(gameState, camel, movement):
 
 # Execute a single round of movement (move all camels once)
 # Moves the camels in a random order
