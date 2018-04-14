@@ -1,6 +1,7 @@
 import camelup as c
 import math
 import random
+import copy
 
 # creates a new game state 
 # the game state is prepopulated with the moved camels 
@@ -51,7 +52,51 @@ def chooseCamelToMove(gameState)
 
 # Move the given camel (and all camels above it) by the given amount
 # output: new gamestate
-def moveCamel(gameState, camel, movement):
+def moveOneCamel(gameState, camel, movement):
+	result = copy.deepcopy(gameState)
+	track = result.camel_track
+	
+	# find camel location
+	camelLocation = findCamel(camel, track)
+	
+	# get camel unit
+	camelUnit = track[camelLocation[0]][camelLocation[1]:]
+	
+	# determine new location
+	newLocation = camelLocation[0] + movement
+	
+	# adjust new location based on traps
+	moveBack = false
+	trapTrack = result.trap_track
+	if newLocation < len(trapTrack):
+		newLocationTrap = trapTrack[newLocation]
+		
+		# if there is a trap
+		if len(newLocationTrap) > 0:
+			# adjust the newLocation
+			newLocation += newLocationTrap[0]
+			
+			# add a point to the player who's trap it is
+			result.player_money_values[newLocationTrap[1]] += 1
+			
+			# mark whether we moved back
+			moveBack = newLocationTrap[0] == -1
+	
+	# remove each camel from the old location
+	for camel in camelUnit:
+		result.camel_track[camelLocation[0]].remove(camel)
+	
+	# add each camel to the new location
+	if newLocation < len(track):
+		for camel in camelUnit:
+			if moveBack:
+				result.camel_track[newLocation].insert(0, camel)
+			else:
+				result.camel_track[newLocation].append(camel)
+	else:
+		result.camel_track[len(track)] = camelUnit
+		
+	return result
 
 # Execute a single round of movement (move all camels once)
 # Moves the camels in a random order
