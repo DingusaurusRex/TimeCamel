@@ -24,31 +24,18 @@ def findCamel(camel,track):
 # output: integer
 def rollDie():
     return randInt(1, 3)
+
 # Randomly choose one of the camels who hasn't moved to move
 # output: integer, the camel number to move
-def chooseCamelToMove(gameState)
+def chooseCamelToMove(gameState):
     camelToMove = -1
     camelMoveState = gamestate.camel_yet_to_move
-	
-	# get list of camel numbers that haven't moved
-	# randomly pick an index of that list
-	# return the camel number at that index
-	
-    unmovedCamels = sum(camelMoveState) - len(camelMoveState)
-    if (unmovedCamels == 0):
-        return -1
-    unmovedCamelChoice = randInt(1, unmovedCamels)
-        unmovedCount = 0
-        index = 0
-    for camel in camelMoveState:
-        index += 1
-        if camel == False
-            unmovedCount += 1
-        if unmovedCount == unmovedCamelChoice:
-            camelToMove = index
-            break
+	unmovedCamelIndices = []
+    for index camelState in enumerate(camelMoveState):
+        if camelState == True:
+            unmovedCamelIndices.append(index)
+    camelToMove = random.choice(unmovedCamelIndices)
     return camelToMove
-        
 
 # Move the given camel (and all camels above it) by the given amount
 # output: new gamestate
@@ -105,15 +92,18 @@ def moveOneCamel(gameState, camel, movement):
 
 # Place a bet on the given camel
 # output: new gamestate
-#def placeRoundBet(gameState, camel):
+def placeRoundBet(gameState, camel):
+    gameState.round_bets.append(camel)
 
 # Place a bet on the losing camel
 # output: new gamestate
-#def placeLoserBet(gameState, camel):
+def placeLoserBet(gameState, camel):
+    gameState.game_loser_bets.apend(camel)
 
 # Place a bet on the winning camel
 # output: new gamestate
-#def placeWinnerBet(gameState, camel):
+def placeWinnerBet(gameState, camel):
+    gameState.game_winner_bets.append(camel)
 
 # Place a trap on the given tile
 # output: new gamestate
