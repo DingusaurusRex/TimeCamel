@@ -25,13 +25,13 @@ def findCamel(camel,track):
 # Randomly pick a number between 1 and 3 inclusive
 # output: integer
 def rollDie():
-    return randInt(1, 3)
+    return random.randint(1, 3)
 
 # Randomly choose one of the camels who hasn't moved to move
 # output: integer, the camel number to move
 def chooseCamelToMove(gameState):
     camelToMove = -1
-    camelMoveState = gamestate.camel_yet_to_move
+    camelMoveState = gameState.camel_yet_to_move
     unmovedCamelIndices = []
     for index, camelState in enumerate(camelMoveState):
         if camelState == True:
@@ -94,7 +94,7 @@ def moveOneCamel(gameState, camel, movement):
 # Execute a single round of movement (move all camels once)
 # Moves the camels in a random order
 # output: new gamestate
-def moveAllCamels(gameSate):
+def moveAllCamels(gameState):
 	result = copy.deepcopy(gameState)
 	numCamelsToMove = sum(result.camel_yet_to_move)
 	for x in range (0, numCamelsToMove):
