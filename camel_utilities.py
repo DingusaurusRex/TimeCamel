@@ -3,6 +3,7 @@ import math
 import random
 import copy
 import move
+import itertools
 
 # creates a new game state 
 # the game state is prepopulated with the moved camels 
@@ -33,7 +34,7 @@ def chooseCamelToMove(gameState):
     camelToMove = -1
     camelMoveState = gamestate.camel_yet_to_move
     unmovedCamelIndices = []
-    for index camelState in enumerate(camelMoveState):
+    for index, camelState in enumerate(camelMoveState):
         if camelState == True:
             unmovedCamelIndices.append(index)
     camelToMove = random.choice(unmovedCamelIndices)
@@ -113,8 +114,8 @@ def placeTrap(gameState, trapType, trapLocation):
     after = trapLocation + 1
     camelLocations = result.camel_track
     trapLocations = result.trap_track
-    if not camelLocation[before] and not camelLocations[trapLocation] and not camelLocations[after] \
-    and  trapLocations[before] and not trapLocations[trapLocation] and not trapLocations[after]
+    if (not camelLocation[before] and not camelLocations[trapLocation] and not camelLocations[after] \
+        and  not trapLocations[before] and not trapLocations[trapLocation] and not trapLocations[after]):
         result.trap_track[trapLocation].append(trapType)
         return result.trap_track[trapLocation].append(trapType)
     return None
@@ -160,4 +161,33 @@ def makeMove(gameState, move):
 
 # Returns the percentage chance that each camel will win the round, given the current game state
 # output: array specifying the round win percent for each camel i.e. [.15, .5, .15, .15, .05]
-#def roundWinnerPercentages(gameState):
+def roundWinnerPercentages(gameState):
+    localGameState = copy.deepcopy(gameState)
+    camelOrderPermutations = itertools.permutations(localGameState.camels)
+    diceRollOptions = (1, 2, 3)
+
+    # determines number of times a game will end in a given state, given all possible outcomes (excludes trap movement)
+    endStatTracker = {}
+    for permutation in camelOrderPermutations:
+        for roll in diceRollOptions:
+            for camel in permutation:
+                moveOneCamel(localGameState, camel, roll)
+            if localGameState.camel_track in endStatTracker:
+                leadCamel = getLeadCamel(localGameState.camel_track)
+                endStatTracker[leadCamel] = 0
+            endStatTracker[leadCamel] += 1
+
+            # reset gameState
+            localGameState = copy.deepcopy(gameState)
+
+
+def getLeadCamel(camel_track)
+    for i in range(len(camel_track) - 1, -1, -1):
+        if camel_track[i]:
+            leadPosition = i
+            break
+    return leadPosition[-1]
+
+
+
+
