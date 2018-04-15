@@ -25,7 +25,7 @@ def findCamel(camel,track):
 # Randomly pick a number between 1 and 3 inclusive
 # output: integer
 def rollDie():
-    return randInt(1, 3)
+    return random.randint(1, 3)
 
 # Randomly choose one of the camels who hasn't moved to move
 # output: integer, the camel number to move
