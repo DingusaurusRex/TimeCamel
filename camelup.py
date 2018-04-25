@@ -307,5 +307,5 @@ def check_bet(hashed_bet, user_bet):
     bet, salt = hashed_bet.split(':')
     return bet == hashlib.sha256(salt.encode() + user_bet.encode()).hexdigest()
 
-# doesn't play the game when you create a game state 
+# commented out so that the game isn't played each time you import this script
 #winner = PlayGame(Player0,Player1,Player2,Player3)
