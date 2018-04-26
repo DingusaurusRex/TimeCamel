@@ -21,7 +21,7 @@ class TimeCamel(PlayerInterface):
 	
 	# Get a list of moves and their expected values
 	# output: list of [move, expected_value]
-	def getMoves(playerNum, gameState)
+	def getMoves(playerNum, gameState):
 		moves = []
 		
 		moves.append(rollExpectedValue(playerNum, gameState))
