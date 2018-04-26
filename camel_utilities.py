@@ -6,6 +6,8 @@ import move
 import itertools
 import pandas as pd
 
+ROUND_BET_VALUES = [5, 3, 2, 0]
+
 # creates a new game state 
 # the game state is prepopulated with the moved camels 
 def startGame():
@@ -209,6 +211,15 @@ def getLeadCamel(camel_track):
 			winning_camel = l[-1]
 	return winning_camel
 
+def getCamelExpectedValue(gameState, camel, winPercentage):
+	betsPlacedOnCamel = 0
+	for bet in gameState.round_bets:
+		if bet[0] == camel:
+			betsPlacedOnCamel += 1
+	nextBetValue = ROUND_BET_VALUES[betsPlacedOnCamel]
+	losePercentage = 1 - winPercentage
+	return nextBetValue * winPercentage - losePercentage
+
 # Use random permutations to calculate the camel who had the highest percentage
 # Note: doesn't take into consideration traps  
 # of times in the lead
@@ -253,4 +264,3 @@ def randRoundWinnerPercentageTraps(game_state,num_iterations,probability_trap=0.
 	winner=leads.index[leads.shape[0]-1]
 	percentage=leads.values[leads.shape[0]-1]/len(lead_camels)
 	return [winner, float(percentage)]
-

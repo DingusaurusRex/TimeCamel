@@ -12,7 +12,7 @@ class GameState:
         self.camel_track = [[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[]]
         self.trap_track = [[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[]] #entry of the form [trap_type (-1,1), player]
         self.player_has_placed_trap = [False,False,False,False]
-        self.round_bets = []		#of the form [camel,player]
+        self.round_bets = []				#of the form [camel,player]
         self.game_winner_bets = []			#of the form [camel,player]
         self.game_loser_bets = []			#of the form [camel,player]
         self.player_game_bets = [[],[],[],[]]
