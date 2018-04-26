@@ -120,6 +120,10 @@ def moveAllCamels(gameState):
 		movement = rollDie()
 		result = moveOneCamel(result, camel, movement)
 		# TODO:  Check if the game should be over and break
+		# stop moving the camels if the game is done 
+		if findCamel(camel,result.camel_track)[0] >= 16: 
+			result.active_game = False 
+			return result 
 	return result
 	
 
@@ -237,28 +241,57 @@ def randRoundWinnerPercentage(game_state,num_iterations):
 	percentage=leads.values[leads.shape[0]-1]/len(lead_camels)
 	return [winner, float(percentage)]
 
+# Similar to moveCamels but with random trap placements 
+def moveAllCamelsTraps(game_state,probability_trap):
+	new_game_state=copy.deepcopy(game_state)
+	for c in new_game_state.camel_yet_to_move:
+		# use the probability supplied to determine if the trap should be set 
+		if random.random() < probability_trap:
+			# randomly select the type and location 
+			trap_type=random.sample(k=1,population=[-1,1])[0]
+			trap_loc=random.sample(k=1,population=range(0,15))[0]
+			# save the new game state 
+			tmp_game_state=placeTrap(new_game_state,trap_type,trap_loc)
+			# change to the new if the game state is not changed 
+			if tmp_game_state is not None:
+				new_game_state=tmp_game_state
+		# move the camel 
+		camel = chooseCamelToMove(new_game_state)
+		movement = rollDie()
+		new_game_state=moveOneCamel(new_game_state,camel,movement)
+		if findCamel(camel,new_game_state.camel_track)[0] >= 16: 
+			new_game_state.active_game = False 
+			return new_game_state
+	return new_game_state
+
+
 # Similar to randRoundWinnerPercentage except with traps!!! 
 def randRoundWinnerPercentageTraps(game_state,num_iterations,probability_trap=0.75):
 	lead_camels=list()
 	for i in range(0,num_iterations):
 		# store a copy of the initial game state 
-		new_game_state=copy.deepcopy(game_state)
-		for c in new_game_state.camel_yet_to_move:
-			# use the probability supplied to determine if the trap should be set 
-			if random.random() < probability_trap:
-				# randomly select the type and location 
-				trap_type=random.sample(k=1,population=[-1,1])[0]
-				trap_loc=random.sample(k=1,population=range(0,15))[0]
-				# save the new game state 
-				tmp_game_state=placeTrap(new_game_state,trap_type,trap_loc)
-				# change to the new if the game state is not changed 
-				if tmp_game_state is not None:
-					new_game_state=tmp_game_state
-			# move the camel 
-			camel = chooseCamelToMove(new_game_state)
-			movement = rollDie()
-			new_game_state=moveOneCamel(new_game_state,camel,movement)
+		new_game_state=moveAllCamelsTraps(game_state,probability_trap)
 		# store the lead camel
+		lead_camels.append(getLeadCamel(new_game_state.camel_track))
+	leads=pd.Series(lead_camels).value_counts().to_frame().sort_values(by=0)
+	winner=leads.index[leads.shape[0]-1]
+	percentage=leads.values[leads.shape[0]-1]/len(lead_camels)
+	return [winner, float(percentage)]
+
+# Calculate the game winner percentages 
+def randGameWinner(game_state,num_iterations,probability_traps):
+	lead_camels=list()
+	for i in range(0,num_iterations):
+		new_game_state=copy.deepcopy(game_state)
+		rounds=0
+		while new_game_state.active_game:
+			if probability_traps > 0:
+				new_game_state=moveAllCamelsTraps(new_game_state,probability_traps)
+				new_game_state.camel_yet_to_move=[True,True,True,True,True]
+			else:
+				new_game_state=moveAllCamels(new_game_state)
+				new_game_state.camel_yet_to_move=[True,True,True,True,True]
+			rounds+=1 
 		lead_camels.append(getLeadCamel(new_game_state.camel_track))
 	leads=pd.Series(lead_camels).value_counts().to_frame().sort_values(by=0)
 	winner=leads.index[leads.shape[0]-1]
