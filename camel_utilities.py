@@ -10,8 +10,11 @@ import numpy as nm
 ROUND_BET_VALUES = [5, 3, 2]
 GAME_BET_VALUES = [8, 5, 3, 2]
 
-GAME_BET_CORRECT_PERCENTAGE = .25
-ROUND_BET_PERCENTAGE_THRESHOLD = 0
+# how often people are correct in their guesses 
+GAME_BET_CORRECT_PERCENTAGE = .5
+
+# minimum thresholds for placing a bet 
+ROUND_BET_PERCENTAGE_THRESHOLD = .3
 GAME_WIN_BET_PERCENTAGE_THRESHOLD = .4
 GAME_LOSE_BET_PERCENTAGE_THRESHOLD = .4
 
