@@ -310,3 +310,4 @@ def check_bet(hashed_bet, user_bet):
 
 # commented out so that the game isn't played each time you import this script
 winner = PlayGame(TimeCamel,Player1,Player2,Player3)
+#winner = PlayGame(Player0,Player1,Player2,Player3)

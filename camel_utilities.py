@@ -7,13 +7,13 @@ import itertools
 import pandas as pd
 import numpy as nm
 
-ROUND_BET_VALUES = [5, 3, 2, 0]
+ROUND_BET_VALUES = [5, 3, 2]
 GAME_BET_VALUES = [8, 5, 3, 2]
 
-GAME_BET_CORRECT_PERCENTAGE = .5
+GAME_BET_CORRECT_PERCENTAGE = .25
 ROUND_BET_PERCENTAGE_THRESHOLD = 0
-GAME_WIN_BET_PERCENTAGE_THRESHOLD = 0
-GAME_LOSE_BET_PERCENTAGE_THRESHOLD = 0
+GAME_WIN_BET_PERCENTAGE_THRESHOLD = .4
+GAME_LOSE_BET_PERCENTAGE_THRESHOLD = .4
 
 # creates a new game state 
 # the game state is prepopulated with the moved camels 
@@ -234,6 +234,9 @@ def getRoundBetExpectedValue(gameState, camel, percentage):
 	for bet in gameState.round_bets:
 		if bet[0] == camel:
 			betsPlacedOnCamel += 1
+	#print(gameState.round_bets)
+	if betsPlacedOnCamel >= len(ROUND_BET_VALUES):
+		return 0
 	nextBetValue = ROUND_BET_VALUES[betsPlacedOnCamel]
 	losePercentage = 1 - percentage
 	if percentage < ROUND_BET_PERCENTAGE_THRESHOLD:
@@ -244,7 +247,7 @@ def getRoundBetExpectedValue(gameState, camel, percentage):
 # Return the expected value of a game winning bet placed on the camel with the percentage it will win
 # NOTE:  if a game bet has already been placed on the given camel, expected value is 0
 def getWinnerBetExpectedValue(gameState, betsPlaced, camel, percentage):
-	if camel in betsPlaced:
+	if camel in betsPlaced or percentage < GAME_WIN_BET_PERCENTAGE_THRESHOLD:
 		return 0
 	else:
 		numBetsPlaced = len(gameState.game_winner_bets)
@@ -255,7 +258,7 @@ def getWinnerBetExpectedValue(gameState, betsPlaced, camel, percentage):
 # Return the expected value of a game losing bet placed on the camel with the percentage it will lose
 # NOTE:  if a game bet has already been placed on the given camel, expected value is 0
 def getLoserBetExpectedValue(gameState, betsPlaced, camel, percentage):
-	if camel in betsPlaced:
+	if camel in betsPlaced or percentage < GAME_LOSE_BET_PERCENTAGE_THRESHOLD:
 		return 0
 	else:
 		numBetsPlaced = len(gameState.game_loser_bets)
@@ -289,7 +292,7 @@ def getLoserBetExpectedValue(gameState, betsPlaced, camel, percentage):
 # Similar to moveCamels but with random trap placements 
 def moveAllCamelsTraps(game_state,probability_trap):
 	new_game_state=copy.deepcopy(game_state)
-	for c in new_game_state.camel_yet_to_move:
+	for c in range(0,sum(new_game_state.camel_yet_to_move)):
 		# use the probability supplied to determine if the trap should be set 
 		if random.random() < probability_trap:
 			# randomly select the type and location 
