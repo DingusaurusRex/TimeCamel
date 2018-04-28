@@ -5,6 +5,7 @@ import copy
 import move
 import itertools
 import pandas as pd
+import numpy as nm
 
 ROUND_BET_VALUES = [5, 3, 2, 0]
 
@@ -228,7 +229,8 @@ def getCamelExpectedValue(gameState, camel, winPercentage):
 # Note: doesn't take into consideration traps  
 # of times in the lead
 # input: number of iterations, camel track  
-# output: [camel, percentage] 
+# output: [[percentage, camel],[percentage, camel] ...]
+# the last one is the winning camel
 # the camel with the highest percentage of time randomally in the lead from this 
 # current camel track 
 def randRoundWinnerPercentage(game_state,num_iterations):
@@ -236,10 +238,13 @@ def randRoundWinnerPercentage(game_state,num_iterations):
 	for i in range(0,num_iterations):
 		g_new=moveAllCamels(game_state)
 		lead_camels.append(getLeadCamel(g_new.camel_track))
-	leads=pd.Series(lead_camels).value_counts().to_frame().sort_values(by=0)
-	winner=leads.index[leads.shape[0]-1]
-	percentage=leads.values[leads.shape[0]-1]/len(lead_camels)
-	return [winner, float(percentage)]
+	leads=pd.Series(lead_camels).value_counts().to_frame().sort_values(by=0)/len(lead_camels)
+	#winner=leads.index[leads.shape[0]-1]
+	#percentage=leads.values[leads.shape[0]-1]/len(lead_camels)
+	#return [winner, float(percentage)]
+	leads=nm.vstack((leads[0].values,leads[0].index)).T.tolist()
+	# return all of the percentages 
+	return leads
 
 # Similar to moveCamels but with random trap placements 
 def moveAllCamelsTraps(game_state,probability_trap):
@@ -266,6 +271,7 @@ def moveAllCamelsTraps(game_state,probability_trap):
 
 
 # Similar to randRoundWinnerPercentage except with traps!!! 
+# output: [[percentage, camel],[percentage, camel] ...]
 def randRoundWinnerPercentageTraps(game_state,num_iterations,probability_trap=0.75):
 	lead_camels=list()
 	for i in range(0,num_iterations):
@@ -273,12 +279,16 @@ def randRoundWinnerPercentageTraps(game_state,num_iterations,probability_trap=0.
 		new_game_state=moveAllCamelsTraps(game_state,probability_trap)
 		# store the lead camel
 		lead_camels.append(getLeadCamel(new_game_state.camel_track))
-	leads=pd.Series(lead_camels).value_counts().to_frame().sort_values(by=0)
-	winner=leads.index[leads.shape[0]-1]
-	percentage=leads.values[leads.shape[0]-1]/len(lead_camels)
-	return [winner, float(percentage)]
+	leads=pd.Series(lead_camels).value_counts().to_frame().sort_values(by=0)/len(lead_camels)
+	#winner=leads.index[leads.shape[0]-1]
+	#percentage=leads.values[leads.shape[0]-1]/len(lead_camels)
+	leads=nm.vstack((leads[0].values,leads[0].index)).T.tolist()
+	# return all of the percentages 
+	return leads
+	#return [winner, float(percentage)]
 
 # Calculate the game winner percentages 
+# output: [[percentage, camel],[percentage, camel] ...]
 def randGameWinner(game_state,num_iterations,probability_traps):
 	lead_camels=list()
 	for i in range(0,num_iterations):
@@ -293,7 +303,11 @@ def randGameWinner(game_state,num_iterations,probability_traps):
 				new_game_state.camel_yet_to_move=[True,True,True,True,True]
 			rounds+=1 
 		lead_camels.append(getLeadCamel(new_game_state.camel_track))
-	leads=pd.Series(lead_camels).value_counts().to_frame().sort_values(by=0)
-	winner=leads.index[leads.shape[0]-1]
-	percentage=leads.values[leads.shape[0]-1]/len(lead_camels)
-	return [winner, float(percentage)]
+	leads=pd.Series(lead_camels).value_counts().to_frame().sort_values(by=0)/len(lead_camels)
+	#winner=leads.index[leads.shape[0]-1]
+	#percentage=leads.values[leads.shape[0]-1]/len(lead_camels)
+	#return [winner, float(percentage)]
+	leads=nm.vstack((leads[0].values,leads[0].index)).T.tolist()
+	# return all of the percentages 
+	return leads
+	#return [winne
