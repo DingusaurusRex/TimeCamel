@@ -1,6 +1,7 @@
 import random, copy, math, uuid, hashlib
 from players import Player0, Player1, Player2, Player3
 from timeCamel import TimeCamel
+from randoBot import RandoBot
 
 camels = [0,1,2,3,4]
 num_camels = len(camels)
@@ -308,8 +309,7 @@ def check_bet(hashed_bet, user_bet):
     bet, salt = hashed_bet.split(':')
     return bet == hashlib.sha256(salt.encode() + user_bet.encode()).hexdigest()
 
-def play_game():
+def play_games(iterations):
     # commented out so that the game isn't played each time you import this script
-    game = PlayGame(TimeCamel,TimeCamel,Player2,Player3)
-    #winner = PlayGame(Player0,Player1,Player2,Player3)
-    return game
+	for x in range(0, iterations):
+		PlayGame(TimeCamel,RandoBot,RandoBot,RandoBot)

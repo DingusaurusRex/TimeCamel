@@ -57,7 +57,6 @@ class TimeCamel(PlayerInterface):
 		spaces_ahead = 2
 		trap_location, e = camel_utilities.getTrapExpectedValue(gameState, playerNum, spaces_ahead, trap_type, ROUND_ITERATIONS_GAME)
 		m = move.Move(PLACE_TRAP_MOVE).withTrapType(-1).withTrapLocation(trap_location)
-		print(e)
 		return [m, e]
 	
 	
@@ -83,8 +82,6 @@ class TimeCamel(PlayerInterface):
 			
 			e = camel_utilities.getLoserBetExpectedValue(gameState, gameBetsPlaced, camel, percentage)
 			m = move.Move(PLACE_GAME_LOSER_BET).withChosenCamel(camel)
-
-			#print(str(camel) + str(percentage))
 			
 			result.append([m, e])
 		
@@ -94,17 +91,11 @@ class TimeCamel(PlayerInterface):
 	# output: list of [move, expected_value]
 	def getMoves(playerNum, gameState):
 		moves = []
-
-		#print(TimeCamel.rollExpectedValue(playerNum, gameState))
 		
 		moves.append(TimeCamel.rollExpectedValue(playerNum, gameState))
-		#print(moves)
 		moves.extend(TimeCamel.roundBetExpectedValues(playerNum, gameState))
-		#print(moves)
 		moves.extend(TimeCamel.gameWinnerAndLoserExpectedValues(playerNum, gameState))
-		#print(moves)
-		# TODO: Add other moves here
-		moves.append(TimeCamel.roundTrapExpectedValues(playerNum, gameState))
+		#moves.append(TimeCamel.roundTrapExpectedValues(playerNum, gameState))
 
 		return moves
 		

@@ -193,7 +193,7 @@ def roundWinnerTrapPercentatges(gameState, trap_location, num_iterations):
 	points=list()
 	for i in range(0, num_iterations):
 		points.append(float(moveAllCamelsFindTraps(gameState, trap_location)))
-	return sum(points)/float(len(points))
+	return sum(points)/len(points)
 
 def getTrapExpectedValue(gameState, player_num, places_ahead, trap_type, num_iterations):
 	trap_place = findOurTrap(gameState.trap_track, player_num) 
@@ -294,7 +294,6 @@ def getRoundBetExpectedValue(gameState, camel, percentage):
 	for bet in gameState.round_bets:
 		if bet[0] == camel:
 			betsPlacedOnCamel += 1
-	#print(gameState.round_bets)
 	if betsPlacedOnCamel >= len(ROUND_BET_VALUES):
 		return 0
 	nextBetValue = ROUND_BET_VALUES[betsPlacedOnCamel]
