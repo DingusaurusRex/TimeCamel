@@ -27,7 +27,7 @@ class Move:
 		return self
 
 	def withChosenCamel(self, chosenCamel):
-		self.chosenCamel = chosenCamel
+		self.chosenCamel = int(chosenCamel)
 		return self
 		
 	def generateMoveArray(self):
@@ -36,10 +36,10 @@ class Move:
 		elif self.moveType == PLACE_TRAP_MOVE:
 			return [PLACE_TRAP_MOVE, self.trapType, self.trapLocation]
 		elif self.moveType == PLACE_ROUND_BET:
-			return [PLACE_ROUND_BET, int(self.chosenCamel)]
+			return [PLACE_ROUND_BET, self.chosenCamel]
 		elif self.moveType == PLACE_GAME_WINNER_BET:
-			return [PLACE_GAME_WINNER_BET, int(self.chosenCamel)]
+			return [PLACE_GAME_WINNER_BET, self.chosenCamel]
 		elif self.moveType == PLACE_GAME_LOSER_BET:
-			return [PLACE_GAME_LOSER_BET, int(self.chosenCamel)]
+			return [PLACE_GAME_LOSER_BET, self.chosenCamel]
 		else:
 			return None

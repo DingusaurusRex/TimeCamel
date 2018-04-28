@@ -5,13 +5,21 @@
 #   [3,projected_game_winner] : Make Game Winner Bet
 #   [4,projected_game_loser] : Make Game Loser Bet
 import random
+import move
 import camel_utilities
 from playerinterface import PlayerInterface
 
-class randoBot(PlayerInterface):
+class RandoBot(PlayerInterface):
 
     # tracks available game winner/loser cards through turns
     availableGameWinnerLoserCards = [0, 1, 2, 3, 4]
+    
+    def findPlaceableLocations(gameState, randTrapType):
+        placeableLocations = []
+        for location in range(15):
+            if (camel_utilities.placeTrap(gameState, randTrapType, location) is not None):
+                placeableLocations.append(location)
+        return placeableLocations
     
 
     def move(playerNum, gameState):
@@ -23,14 +31,14 @@ class randoBot(PlayerInterface):
         # determine randomized trap location
         placeableLocations = []
         randTrapLocation = -1
-        placeableLocations = findPlaceableLocations(gameState, randTrapType)
+        placeableLocations = RandoBot.findPlaceableLocations(gameState, randTrapType)
         if (len(placeableLocations) > 0):
-            randTrapLocation = random.sample(k=1, sample=placeableLocations)[0])
+            randTrapLocation = random.sample(k=1, population=placeableLocations)[0]
         else:
             # remove place trap from possible move types if no possible locations
             possibleMoveTypes.remove(1)
 
-        if (len(availableGameWinnerLoserCards) <= 0):
+        if (len(RandoBot.availableGameWinnerLoserCards) <= 0):
             # removes make game winner/loser bet from possible move types if no cards left
             possibleMoveTypes.remove(3)
             possibleMoveTypes.remove(4)
@@ -44,7 +52,7 @@ class randoBot(PlayerInterface):
             # determines possible round winning camels that can be chosen and chooses one at random
             initialRandProjectedCamel = randProjectedCamel
             unacceptableCamelBet = True
-            while (unacceptableCamelBet)
+            while unacceptableCamelBet:
                 projectedCamelCount = 0
                 for bet in gameState.round_bets:
                     if (bet[0] == randProjectedCamel):
@@ -66,7 +74,7 @@ class randoBot(PlayerInterface):
             initialRandProjectedCamel = randProjectedCamel
             unacceptableCamelBet = True
             while (unacceptableCamelBet):
-                if (randProjectedCamel is in availableGameWinnerLoserCards):
+                if (randProjectedCamel in RandoBot.availableGameWinnerLoserCards):
                     unacceptableCamelBet = False
                 else:
                     randProjectedCamel += 1
@@ -79,17 +87,5 @@ class randoBot(PlayerInterface):
                         break
 
 
-        myMove = move(randMoveType).withTrapType(randTrapType).withTrapLocation(randTrapLocation).withChosenCamel(randProjectedCamel)
+        myMove = move.Move(randMoveType).withTrapType(randTrapType).withTrapLocation(randTrapLocation).withChosenCamel(randProjectedCamel)
         return myMove.generateMoveArray()
-
-    def findPlaceableLocations(gameState, randTrapType):
-        placeableLocations = []
-        for location in range(15):
-            if (camel_utilities.placeTrap(gameState, randTrapType, location) is not None):
-                placeableLocations.append(location)
-        return placeableLocations
-
-
-
-
-
