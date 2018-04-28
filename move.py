@@ -17,15 +17,15 @@ chosenCamel = 0
 def __init__(self, moveType):
 	self.moveType = moveType
 	
-def setTrapType(trapType):
+def withTrapType(trapType):
 	self.trapType = trapType
 	return self
 	
-def setTrapLocation(trapLocation):
+def withTrapLocation(trapLocation):
 	self.trapLocation = trapLocation
 	return self
 
-def setChosenCamel(chosenCamel):
+def withChosenCamel(chosenCamel):
 	self.chosenCamel = chosenCamel
 	return self
 	
