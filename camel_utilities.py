@@ -52,7 +52,6 @@ def chooseCamelToMove(gameState):
             unmovedCamelIndices.append(index)
     camelToMove = random.choice(unmovedCamelIndices)
     return camelToMove
-
 	
 	# commented out this code - i don't think that it's needed anymore?
 	#camelToMove = -1
@@ -68,9 +67,11 @@ def chooseCamelToMove(gameState):
 
 # Move the given camel (and all camels above it) by the given amount
 # output: new gamestate
-def moveOneCamel(gameState, camel, movement):
+def moveOneCamel(gameState, camel, movement, trap_location=-1):
 	result = copy.deepcopy(gameState)
 	
+	add_point = False
+
 	# mark the camel as moved
 	result.camel_yet_to_move[camel] = False
 	
@@ -84,6 +85,10 @@ def moveOneCamel(gameState, camel, movement):
 	
 	# determine new location
 	newLocation = camelLocation[0] + movement
+
+	if trap_location > 0:
+		if newLocation == trap_location:
+			add_point = True
 	
 	# adjust new location based on traps
 	moveBack = False
@@ -117,7 +122,10 @@ def moveOneCamel(gameState, camel, movement):
 	else:
 		result.camel_track[len(track)] = camelUnit
 		
-	return result
+	if trap_location > 0:
+		return add_point, result
+	else:
+		return result 
 
 # Execute a single round of movement (move all camels once)
 # Moves the camels in a random order
@@ -153,6 +161,55 @@ def placeTrap(gameState, trapType, trapLocation):
 			# return the updated gamestate 
 			return result
 	return None
+
+def findOurTrap(trapTrack, player_num):
+	count=0
+	for track in trapTrack:
+		if len(track) > 0:
+			for player in track:
+				if player == player_num:
+					return count 
+		count += 1 
+	return -1 
+
+def moveAllCamelsFindTraps(gameState, trap_location):
+	result = copy.deepcopy(gameState)
+	numCamelsToMove = sum(result.camel_yet_to_move)
+	points = 0 
+	for x in range (0, numCamelsToMove):
+		camel = chooseCamelToMove(result)
+		movement = rollDie()
+		point, result = moveOneCamel(result, camel, movement, trap_location)
+		if point:
+			points += 1 
+		# TODO:  Check if the game should be over and break
+		# stop moving the camels if the game is done 
+		if findCamel(camel,result.camel_track)[0] >= 16: 
+			result.active_game = False 
+			return points 
+	return points 
+
+def roundWinnerTrapPercentatges(gameState, trap_location, num_iterations):
+	points=list()
+	for i in range(0, num_iterations):
+		points.append(float(moveAllCamelsFindTraps(gameState, trap_location)))
+	return sum(points)/float(len(points))
+
+def getTrapExpectedValue(gameState, player_num, places_ahead, trap_type, num_iterations):
+	trap_place = findOurTrap(gameState.trap_track, player_num) 
+	last_camel = getLeadCamel(gameState.camel_track)
+	lead_camel = getLastCamel(gameState.camel_track)
+	placed_round_bet = True 
+	if placed_round_bet:
+		if trap_place == -1 | trap_place < last_camel:
+			# we can place a trap 
+			new_game = placeTrap(gameState, trap_type, lead_camel + places_ahead) 
+			if new_game is None:
+				return -1, 0 
+			else:
+				return lead_camel + places_ahead, roundWinnerTrapPercentatges(new_game, lead_camel + places_ahead, num_iterations)
+	else:
+		return -1, 0
 
 # Place a bet on the given camel
 # output: new gamestate
@@ -254,7 +311,7 @@ def getWinnerBetExpectedValue(gameState, betsPlaced, camel, percentage):
 		return 0
 	else:
 		numBetsPlaced = len(gameState.game_winner_bets)
-		correctBets = min(math.ceil(numBetsPlaced * GAME_BET_CORRECT_PERCENTAGE), 4)
+		correctBets = min(math.ceil(numBetsPlaced * GAME_BET_CORRECT_PERCENTAGE), 3)
 		losePercentage = 1 - percentage
 		return GAME_BET_VALUES[correctBets] * percentage - losePercentage
 
@@ -265,7 +322,7 @@ def getLoserBetExpectedValue(gameState, betsPlaced, camel, percentage):
 		return 0
 	else:
 		numBetsPlaced = len(gameState.game_loser_bets)
-		correctBets = min(math.ceil(numBetsPlaced * GAME_BET_CORRECT_PERCENTAGE), 4)
+		correctBets = min(math.ceil(numBetsPlaced * GAME_BET_CORRECT_PERCENTAGE), 3)
 		losePercentage = 1 - percentage
 		return GAME_BET_VALUES[correctBets] * percentage - losePercentage
 

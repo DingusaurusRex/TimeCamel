@@ -22,6 +22,8 @@ MOVE_EXPECTED_VALUE = 1
 
 gameBetsPlaced = []
 
+
+
 class TimeCamel(PlayerInterface):
 		
 	# Return the expected value of a Roll move
@@ -47,6 +49,17 @@ class TimeCamel(PlayerInterface):
 			result.append([m, e])
 		
 		return result
+	
+	# Return the expected value of a Round Bet move
+	# output: [[move, expected value], ...]
+	def roundTrapExpectedValues(playerNum, gameState):
+		trap_type = -1
+		spaces_ahead = 2
+		trap_location, e = camel_utilities.getTrapExpectedValue(gameState, playerNum, spaces_ahead, trap_type, ROUND_ITERATIONS_GAME)
+		m = move.Move(PLACE_TRAP_MOVE).withTrapType(-1).withTrapLocation(trap_location)
+		print(e)
+		return [m, e]
+	
 	
 	# Return the expected value of a Game Winner Bet move
 	# output: [[move, expected value], ...]
@@ -91,7 +104,8 @@ class TimeCamel(PlayerInterface):
 		moves.extend(TimeCamel.gameWinnerAndLoserExpectedValues(playerNum, gameState))
 		#print(moves)
 		# TODO: Add other moves here
-		
+		moves.append(TimeCamel.roundTrapExpectedValues(playerNum, gameState))
+
 		return moves
 		
 	# Determine the move our bot will use

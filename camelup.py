@@ -76,7 +76,7 @@ def PlayGame(player0,player1,player2,player3):
     print("$ Totals:")
     print("\t" + str(g.player_money_values))
     print("Winner: " + str(g.game_winner))
-    return g.game_winner
+    return g
 
 
 def MoveCamel(g,player):
@@ -308,6 +308,8 @@ def check_bet(hashed_bet, user_bet):
     bet, salt = hashed_bet.split(':')
     return bet == hashlib.sha256(salt.encode() + user_bet.encode()).hexdigest()
 
-# commented out so that the game isn't played each time you import this script
-winner = PlayGame(TimeCamel,Player1,Player2,Player3)
-#winner = PlayGame(Player0,Player1,Player2,Player3)
+def play_game():
+    # commented out so that the game isn't played each time you import this script
+    game = PlayGame(TimeCamel,TimeCamel,Player2,Player3)
+    #winner = PlayGame(Player0,Player1,Player2,Player3)
+    return game
