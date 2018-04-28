@@ -8,6 +8,12 @@ import pandas as pd
 import numpy as nm
 
 ROUND_BET_VALUES = [5, 3, 2, 0]
+GAME_BET_VALUES = [8, 5, 3, 2]
+
+GAME_BET_CORRECT_PERCENTAGE = .5
+ROUND_BET_PERCENTAGE_THRESHOLD = 0
+GAME_WIN_BET_PERCENTAGE_THRESHOLD = 0
+GAME_LOSE_BET_PERCENTAGE_THRESHOLD = 0
 
 # creates a new game state 
 # the game state is prepopulated with the moved camels 
@@ -222,14 +228,40 @@ def getLastCamel(camel_track):
 			# return the first camel found
 			return l[0]
 
-def getCamelExpectedValue(gameState, camel, winPercentage):
+# Return the expected value of a Round Bet on the given camel with the given win percentage
+def getRoundBetExpectedValue(gameState, camel, percentage):
 	betsPlacedOnCamel = 0
 	for bet in gameState.round_bets:
 		if bet[0] == camel:
 			betsPlacedOnCamel += 1
 	nextBetValue = ROUND_BET_VALUES[betsPlacedOnCamel]
-	losePercentage = 1 - winPercentage
-	return nextBetValue * winPercentage - losePercentage
+	losePercentage = 1 - percentage
+	if percentage < ROUND_BET_PERCENTAGE_THRESHOLD:
+		return 0
+	else:
+		return nextBetValue * percentage - losePercentage
+
+# Return the expected value of a game winning bet placed on the camel with the percentage it will win
+# NOTE:  if a game bet has already been placed on the given camel, expected value is 0
+def getWinnerBetExpectedValue(gameState, betsPlaced, camel, percentage):
+	if camel in betsPlaced:
+		return 0
+	else:
+		numBetsPlaced = len(gameState.game_winner_bets)
+		correctBets = min(math.ceil(numBetsPlaced * GAME_BET_CORRECT_PERCENTAGE), 4)
+		losePercentage = 1 - percentage
+		return GAME_BET_VALUES[correctBets] * percentage - losePercentage
+
+# Return the expected value of a game losing bet placed on the camel with the percentage it will lose
+# NOTE:  if a game bet has already been placed on the given camel, expected value is 0
+def getLoserBetExpectedValue(gameState, betsPlaced, camel, percentage):
+	if camel in betsPlaced:
+		return 0
+	else:
+		numBetsPlaced = len(gameState.game_loser_bets)
+		correctBets = min(math.ceil(numBetsPlaced * GAME_BET_CORRECT_PERCENTAGE), 4)
+		losePercentage = 1 - percentage
+		return GAME_BET_VALUES[correctBets] * percentage - losePercentage
 
 # Removing this methods since you can go this with probability traps = 0 
 # in randRoundWinnerPercentageTraps
@@ -298,7 +330,7 @@ def randRoundWinnerPercentageTraps(game_state,num_iterations,probability_trap=0.
 # Calculate the game winner percentages 
 # output: leads: [[camel, percentage],[camel, percentage] ...], 
 # 			lasts: [[camel, percentage],[camel, percentage] ...]
-def randGameWinner(game_state,num_iterations,probability_traps):
+def randGameWinnersAndLosers(game_state,num_iterations,probability_traps):
 	lead_camels=list()
 	last_camels=list()
 	for i in range(0,num_iterations):
